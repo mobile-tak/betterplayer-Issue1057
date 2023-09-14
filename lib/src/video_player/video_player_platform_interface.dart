@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -179,6 +180,8 @@ abstract class VideoPlayerPlatform {
   // This private method is called by the instance setter, which fails if the class is
   // implemented with `implements`.
   void _verifyProvidesDefaultImplementations() {}
+
+  void skipAd(int? textureId) {}
 }
 
 /// Description of the data source used to create an instance of
@@ -217,6 +220,7 @@ class DataSource {
     this.cacheKey,
     this.showNotification = false,
     this.title,
+    this.adTag,
     this.author,
     this.imageUrl,
     this.notificationChannelName,
@@ -274,6 +278,8 @@ class DataSource {
   final Map<String, String?>? headers;
 
   final bool useCache;
+
+  final String? adTag;
 
   final int? maxCacheSize;
 
@@ -462,6 +468,18 @@ enum VideoEventType {
   /// Picture in picture mode has been dismissed
   pipStop,
 
+  //IMA Ad has started playing
+  adStarted,
+
+  //IMA Ad has finished playing
+  adEnded,
+
+  //IMA Ad skippable state has changed
+  adSkippableStateChanged,
+
+  //Ad has been skipped
+  adSkipped,
+
   /// An unknown event has been received.
   unknown,
 }
@@ -524,4 +542,13 @@ class DurationRange {
 
   @override
   int get hashCode => start.hashCode ^ end.hashCode;
+}
+
+class VideoAdEvent extends VideoEvent {
+  bool isSkippable;
+  VideoAdEvent({
+    required VideoEventType eventType,
+    required String? key,
+    this.isSkippable = false,
+  }) : super(eventType: eventType, key: key);
 }

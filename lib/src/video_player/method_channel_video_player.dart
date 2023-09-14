@@ -60,6 +60,7 @@ class MethodChannelVideoPlayer extends VideoPlayerPlatform {
         dataSourceDescription = <String, dynamic>{
           'key': dataSource.key,
           'asset': dataSource.asset,
+          'adTag': dataSource.adTag,
           'package': dataSource.package,
           'useCache': false,
           'maxCacheSize': 0,
@@ -77,6 +78,7 @@ class MethodChannelVideoPlayer extends VideoPlayerPlatform {
         dataSourceDescription = <String, dynamic>{
           'key': dataSource.key,
           'uri': dataSource.uri,
+          'adTag': dataSource.adTag,
           'formatHint': dataSource.rawFormalHint,
           'headers': dataSource.headers,
           'useCache': dataSource.useCache,
@@ -281,6 +283,13 @@ class MethodChannelVideoPlayer extends VideoPlayerPlatform {
   }
 
   @override
+  void skipAd(int? textureId) {
+    _channel.invokeMethod<void>('skipAd', <String, dynamic>{
+      'textureId': textureId,
+    });
+  }
+
+  @override
   Future<void> clearCache() {
     return _channel.invokeMethod<void>(
       'clearCache',
@@ -408,7 +417,29 @@ class MethodChannelVideoPlayer extends VideoPlayerPlatform {
             eventType: VideoEventType.pipStop,
             key: key,
           );
-
+        case 'adStarted':
+          return VideoEvent(
+            eventType: VideoEventType.adStarted,
+            key: key,
+          );
+        case 'adEnded':
+          return VideoEvent(
+            eventType: VideoEventType.adEnded,
+            duration: Duration(milliseconds: map['duration'] as int),
+            key: key,
+          );
+        case 'adSkipped':
+          return VideoEvent(
+            eventType: VideoEventType.adSkipped,
+            duration: Duration(milliseconds: map['duration'] as int),
+            key: key,
+          );
+        case 'adSkippableStateChanged':
+          return VideoAdEvent(
+            eventType: VideoEventType.adSkippableStateChanged,
+            isSkippable: (map["skippable"] as bool? ?? false),
+            key: key,
+          );
         default:
           return VideoEvent(
             eventType: VideoEventType.unknown,

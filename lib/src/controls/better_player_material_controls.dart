@@ -40,6 +40,8 @@ class _BetterPlayerMaterialControlsState
   Timer? _showAfterExpandCollapseTimer;
   bool _displayTapped = false;
   bool _wasLoading = false;
+  bool _canSkipAd = false;
+  bool _isAdPlaying = false;
   VideoPlayerController? _controller;
   BetterPlayerController? _betterPlayerController;
   StreamSubscription? _controlsVisibilityStreamSubscription;
@@ -71,6 +73,34 @@ class _BetterPlayerMaterialControlsState
         child: _buildErrorWidget(),
       );
     }
+    if (_isAdPlaying) {
+      if (_canSkipAd) {
+        return Stack(
+          children: [
+            Positioned(
+              right: 16,
+              bottom: 16,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  _controller?.skipAd();
+                },
+                child: Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      border: Border.all(color: Colors.black)),
+                  child: Text("Skip the Damn AD!"),
+                ),
+              ),
+            ),
+          ],
+        );
+      } else {
+        return Container();
+      }
+    }
+
     return GestureDetector(
       onTap: () {
         if (BetterPlayerMultipleGestureDetector.of(context) != null) {
@@ -679,6 +709,13 @@ class _BetterPlayerMaterialControlsState
 
   void _updateState() {
     if (mounted) {
+      if (_isAdPlaying != _controller?.value.isAdPlaying ||
+          _canSkipAd != _controller?.value.canSkipAd) {
+        setState(() {
+          _isAdPlaying = _controller?.value.isAdPlaying ?? false;
+          _canSkipAd = _controller?.value.canSkipAd ?? false;
+        });
+      }
       if (!controlsNotVisible ||
           isVideoFinished(_controller!.value) ||
           _wasLoading ||

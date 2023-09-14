@@ -193,6 +193,9 @@ class BetterPlayerController {
   ///Flag which holds information about player visibility
   bool _isPlayerVisible = true;
 
+  //Indicates whether an ad is currently playing or not
+  bool _wasAdPlaying = false;
+
   final StreamController<BetterPlayerControllerEvent>
       _controllerEventStreamController = StreamController.broadcast();
 
@@ -773,6 +776,18 @@ class BetterPlayerController {
           },
         ),
       );
+    }
+    if (currentVideoPlayerValue.isAdPlaying && !_wasAdPlaying) {
+      _wasAdPlaying = true;
+      _postEvent(BetterPlayerEvent(BetterPlayerEventType.adStarted));
+    }
+    if (!currentVideoPlayerValue.isAdPlaying && _wasAdPlaying) {
+      _wasAdPlaying = false;
+      _postEvent(BetterPlayerEvent(BetterPlayerEventType.adEnded));
+    }
+    if (currentVideoPlayerValue.isAdPlaying &&
+        currentVideoPlayerValue.canSkipAd) {
+      _postEvent(BetterPlayerEvent(BetterPlayerEventType.canSkipAd));
     }
     if (currentVideoPlayerValue.initialized &&
         !_hasCurrentDataSourceInitialized) {

@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // Copyright 2017 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
@@ -5,10 +6,12 @@
 // Dart imports:
 import 'dart:async';
 import 'dart:io';
-import 'package:better_player/src/configuration/better_player_buffering_configuration.dart';
-import 'package:better_player/src/video_player/video_player_platform_interface.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import 'package:better_player/src/configuration/better_player_buffering_configuration.dart';
+import 'package:better_player/src/video_player/video_player_platform_interface.dart';
 
 final VideoPlayerPlatform _videoPlayerPlatform = VideoPlayerPlatform.instance
 // This will clear all open videos on the platform when a full restart is
@@ -22,7 +25,6 @@ class VideoPlayerValue {
   /// rest will initialize with default values when unset.
   VideoPlayerValue({
     required this.duration,
-    this.size,
     this.position = const Duration(),
     this.absolutePosition,
     this.buffered = const <DurationRange>[],
@@ -32,7 +34,10 @@ class VideoPlayerValue {
     this.volume = 1.0,
     this.speed = 1.0,
     this.errorDescription,
+    this.size,
     this.isPip = false,
+    this.isAdPlaying = false,
+    this.canSkipAd = false,
   });
 
   /// Returns an instance with a `null` [Duration].
@@ -90,6 +95,12 @@ class VideoPlayerValue {
   /// Indicates whether or not the video has been loaded and is ready to play.
   bool get initialized => duration != null;
 
+  //Indicates whether an ad is currently playing
+  final bool isAdPlaying;
+
+  //Indicates whether the current ad is skippable or not
+  final bool canSkipAd;
+
   /// Indicates whether or not the video is in an error state. If this is true
   /// [errorDescription] should have information about the problem.
   bool get hasError => errorDescription != null;
@@ -111,7 +122,6 @@ class VideoPlayerValue {
   /// except for any overrides passed in as arguments to [copyWidth].
   VideoPlayerValue copyWith({
     Duration? duration,
-    Size? size,
     Duration? position,
     DateTime? absolutePosition,
     List<DurationRange>? buffered,
@@ -119,13 +129,15 @@ class VideoPlayerValue {
     bool? isLooping,
     bool? isBuffering,
     double? volume,
-    String? errorDescription,
     double? speed,
+    String? errorDescription,
+    Size? size,
     bool? isPip,
+    bool? isAdPlaying,
+    bool? canSkipAd,
   }) {
     return VideoPlayerValue(
       duration: duration ?? this.duration,
-      size: size ?? this.size,
       position: position ?? this.position,
       absolutePosition: absolutePosition ?? this.absolutePosition,
       buffered: buffered ?? this.buffered,
@@ -135,24 +147,16 @@ class VideoPlayerValue {
       volume: volume ?? this.volume,
       speed: speed ?? this.speed,
       errorDescription: errorDescription ?? this.errorDescription,
+      size: size ?? this.size,
       isPip: isPip ?? this.isPip,
+      isAdPlaying: isAdPlaying ?? this.isAdPlaying,
+      canSkipAd: canSkipAd ?? this.canSkipAd,
     );
   }
 
   @override
   String toString() {
-    // ignore: no_runtimetype_tostring
-    return '$runtimeType('
-        'duration: $duration, '
-        'size: $size, '
-        'position: $position, '
-        'absolutePosition: $absolutePosition, '
-        'buffered: [${buffered.join(', ')}], '
-        'isPlaying: $isPlaying, '
-        'isLooping: $isLooping, '
-        'isBuffering: $isBuffering, '
-        'volume: $volume, '
-        'errorDescription: $errorDescription)';
+    return 'VideoPlayerValue(duration: $duration, position: $position, absolutePosition: $absolutePosition, buffered: $buffered, isPlaying: $isPlaying, isLooping: $isLooping, isBuffering: $isBuffering, volume: $volume, speed: $speed, errorDescription: $errorDescription, size: $size, isPip: $isPip, isAdPlaying: $isAdPlaying, canSkipAd: $canSkipAd)';
   }
 }
 
@@ -251,6 +255,19 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
           break;
         case VideoEventType.pipStop:
           value = value.copyWith(isPip: false);
+          break;
+        case VideoEventType.adStarted:
+          value = value.copyWith(isAdPlaying: true);
+          break;
+        case VideoEventType.adEnded:
+          value = value.copyWith(isAdPlaying: false, duration: event.duration);
+          break;
+        case VideoEventType.adSkipped:
+          value = value.copyWith(isAdPlaying: false, duration: event.duration);
+          break;
+        case VideoEventType.adSkippableStateChanged:
+          value =
+              value.copyWith(canSkipAd: (event as VideoAdEvent).isSkippable);
           break;
         case VideoEventType.unknown:
           break;
@@ -635,6 +652,13 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
 
   static Future stopPreCache(String url, String? cacheKey) async {
     return _videoPlayerPlatform.stopPreCache(url, cacheKey);
+  }
+
+  void skipAd() {
+    if (Platform.isAndroid) {
+      _videoPlayerPlatform.skipAd(_textureId);
+      value = value.copyWith(isAdPlaying: false);
+    }
   }
 }
 

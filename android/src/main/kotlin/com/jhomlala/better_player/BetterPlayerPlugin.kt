@@ -216,6 +216,10 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
                     player.setMixWithOthers(mixWitOthers)
                 }
             }
+            SKIP_AD ->{
+                player.skipAd()
+                result.success(null)
+            }
             DISPOSE_METHOD -> {
                 dispose(player, textureId)
                 result.success(null)
@@ -234,6 +238,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
         val key = getParameter(dataSource, KEY_PARAMETER, "")
         val headers: Map<String, String> = getParameter(dataSource, HEADERS_PARAMETER, HashMap())
         val overriddenDuration: Number = getParameter(dataSource, OVERRIDDEN_DURATION_PARAMETER, 0)
+        val adTag=call.argument<String>(AD_TAG)
         if (dataSource[ASSET_PARAMETER] != null) {
             val asset = getParameter(dataSource, ASSET_PARAMETER, "")
             val assetLookupKey: String = if (dataSource[PACKAGE_PARAMETER] != null) {
@@ -250,6 +255,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
                 flutterState?.applicationContext!!,
                 key,
                 "asset:///$assetLookupKey",
+                    adTag,
                 null,
                 result,
                 headers,
@@ -278,6 +284,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
                 flutterState!!.applicationContext,
                 key,
                 uri,
+                    adTag,
                 formatHint,
                 result,
                 headers,
@@ -338,6 +345,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
         val url = call.argument<String>(URL_PARAMETER)
         BetterPlayer.stopPreCache(flutterState?.applicationContext, url, result)
     }
+
 
     private fun clearCache(result: MethodChannel.Result) {
         BetterPlayer.clearCache(flutterState?.applicationContext, result)
@@ -483,6 +491,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
     companion object {
         private const val TAG = "BetterPlayerPlugin"
         private const val CHANNEL = "better_player_channel"
+        private const val AD_TAG="ad_tag"
         private const val EVENTS_CHANNEL = "better_player_channel/videoEvents"
         private const val DATA_SOURCE_PARAMETER = "dataSource"
         private const val KEY_PARAMETER = "key"
@@ -545,5 +554,6 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
         private const val DISPOSE_METHOD = "dispose"
         private const val PRE_CACHE_METHOD = "preCache"
         private const val STOP_PRE_CACHE_METHOD = "stopPreCache"
+        private const val SKIP_AD = "skipAd"
     }
 }
