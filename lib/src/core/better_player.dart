@@ -12,27 +12,29 @@ import 'package:wakelock/wakelock.dart';
 class BetterPlayer extends StatefulWidget {
   const BetterPlayer({Key? key, required this.controller}) : super(key: key);
 
-  factory BetterPlayer.network(
-    String url, {
-    BetterPlayerConfiguration? betterPlayerConfiguration,
-  }) =>
+  factory BetterPlayer.network(String url,
+          {BetterPlayerConfiguration? betterPlayerConfiguration,
+          String? adTag}) =>
       BetterPlayer(
         controller: BetterPlayerController(
           betterPlayerConfiguration ?? const BetterPlayerConfiguration(),
-          betterPlayerDataSource:
-              BetterPlayerDataSource(BetterPlayerDataSourceType.network, url),
+          betterPlayerDataSource: BetterPlayerDataSource(
+              BetterPlayerDataSourceType.network, url,
+              adTag: adTag),
         ),
       );
 
   factory BetterPlayer.file(
     String url, {
     BetterPlayerConfiguration? betterPlayerConfiguration,
+    String? adTag,
   }) =>
       BetterPlayer(
         controller: BetterPlayerController(
           betterPlayerConfiguration ?? const BetterPlayerConfiguration(),
-          betterPlayerDataSource:
-              BetterPlayerDataSource(BetterPlayerDataSourceType.file, url),
+          betterPlayerDataSource: BetterPlayerDataSource(
+              BetterPlayerDataSourceType.file, url,
+              adTag: adTag),
         ),
       );
 

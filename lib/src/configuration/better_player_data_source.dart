@@ -32,6 +32,9 @@ class BetterPlayerDataSource {
   ///Should player use hls tracks
   final bool? useAsmsTracks;
 
+  //The VAST adTag
+  final String? adTag;
+
   ///Should player use hls /das audio tracks
   final bool? useAsmsAudioTracks;
 
@@ -81,6 +84,7 @@ class BetterPlayerDataSource {
     this.url, {
     this.bytes,
     this.subtitles,
+    this.adTag,
     this.liveStream = false,
     this.headers,
     this.useAsmsSubtitles = true,
@@ -116,6 +120,7 @@ class BetterPlayerDataSource {
     bool? useAsmsSubtitles,
     bool? useAsmsTracks,
     bool? useAsmsAudioTracks,
+    String? adTag,
     Map<String, String>? qualities,
     BetterPlayerCacheConfiguration? cacheConfiguration,
     BetterPlayerNotificationConfiguration notificationConfiguration =
@@ -133,6 +138,7 @@ class BetterPlayerDataSource {
       subtitles: subtitles,
       liveStream: liveStream,
       headers: headers,
+      adTag: adTag,
       useAsmsSubtitles: useAsmsSubtitles,
       useAsmsTracks: useAsmsTracks,
       useAsmsAudioTracks: useAsmsAudioTracks,
@@ -154,6 +160,7 @@ class BetterPlayerDataSource {
     List<BetterPlayerSubtitlesSource>? subtitles,
     bool? useAsmsSubtitles,
     bool? useAsmsTracks,
+    String? adTag,
     Map<String, String>? qualities,
     BetterPlayerCacheConfiguration? cacheConfiguration,
     BetterPlayerNotificationConfiguration? notificationConfiguration,
@@ -164,6 +171,7 @@ class BetterPlayerDataSource {
       BetterPlayerDataSourceType.file,
       url,
       subtitles: subtitles,
+      adTag: adTag,
       useAsmsSubtitles: useAsmsSubtitles,
       useAsmsTracks: useAsmsTracks,
       resolutions: qualities,

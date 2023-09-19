@@ -159,7 +159,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
                 result.success(null)
             }
             PLAY_METHOD -> {
-                setupNotification(player)
+//                setupNotification(player)
                 player.play()
                 result.success(null)
             }
@@ -238,7 +238,8 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
         val key = getParameter(dataSource, KEY_PARAMETER, "")
         val headers: Map<String, String> = getParameter(dataSource, HEADERS_PARAMETER, HashMap())
         val overriddenDuration: Number = getParameter(dataSource, OVERRIDDEN_DURATION_PARAMETER, 0)
-        val adTag=call.argument<String>(AD_TAG)
+        val adTag= dataSource[AD_TAG] as String?
+        Log.d("chech", "setDataSource: ${adTag}")
         if (dataSource[ASSET_PARAMETER] != null) {
             val asset = getParameter(dataSource, ASSET_PARAMETER, "")
             val assetLookupKey: String = if (dataSource[PACKAGE_PARAMETER] != null) {
@@ -416,7 +417,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
 
     private fun enablePictureInPicture(player: BetterPlayer) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            player.setupMediaSession(flutterState!!.applicationContext)
+//            player.setupMediaSession(flutterState!!.applicationContext)
             activity!!.enterPictureInPictureMode(PictureInPictureParams.Builder().build())
             startPictureInPictureListenerTimer(player)
             player.onPictureInPictureStatusChanged(true)
@@ -427,7 +428,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
         stopPipHandler()
         activity!!.moveTaskToBack(false)
         player.onPictureInPictureStatusChanged(false)
-        player.disposeMediaSession()
+//        player.disposeMediaSession()
     }
 
     private fun startPictureInPictureListenerTimer(player: BetterPlayer) {
@@ -438,7 +439,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
                     pipHandler!!.postDelayed(pipRunnable!!, 100)
                 } else {
                     player.onPictureInPictureStatusChanged(false)
-                    player.disposeMediaSession()
+//                    player.disposeMediaSession()
                     stopPipHandler()
                 }
             }
@@ -491,7 +492,7 @@ class BetterPlayerPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
     companion object {
         private const val TAG = "BetterPlayerPlugin"
         private const val CHANNEL = "better_player_channel"
-        private const val AD_TAG="ad_tag"
+        private const val AD_TAG="adTag"
         private const val EVENTS_CHANNEL = "better_player_channel/videoEvents"
         private const val DATA_SOURCE_PARAMETER = "dataSource"
         private const val KEY_PARAMETER = "key"

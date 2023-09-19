@@ -103,6 +103,7 @@ class MethodChannelVideoPlayer extends VideoPlayerPlatform {
         dataSourceDescription = <String, dynamic>{
           'key': dataSource.key,
           'uri': dataSource.uri,
+          'adTag': dataSource.adTag,
           'useCache': false,
           'maxCacheSize': 0,
           'maxCacheFileSize': 0,

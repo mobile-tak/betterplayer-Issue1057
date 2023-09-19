@@ -447,6 +447,7 @@ class BetterPlayerController {
         await videoPlayerController?.setNetworkDataSource(
           betterPlayerDataSource.url,
           headers: _getHeaders(),
+          adTag: _betterPlayerDataSource!.adTag,
           useCache:
               _betterPlayerDataSource!.cacheConfiguration?.useCache ?? false,
           maxCacheSize:
@@ -487,6 +488,7 @@ class BetterPlayerController {
 
         await videoPlayerController?.setFileDataSource(
             File(betterPlayerDataSource.url),
+            adTag: _betterPlayerDataSource?.adTag,
             showNotification: _betterPlayerDataSource
                 ?.notificationConfiguration?.showNotification,
             title: _betterPlayerDataSource?.notificationConfiguration?.title,
@@ -508,6 +510,7 @@ class BetterPlayerController {
           await videoPlayerController?.setFileDataSource(file,
               showNotification: _betterPlayerDataSource
                   ?.notificationConfiguration?.showNotification,
+              adTag: _betterPlayerDataSource?.adTag,
               title: _betterPlayerDataSource?.notificationConfiguration?.title,
               author:
                   _betterPlayerDataSource?.notificationConfiguration?.author,

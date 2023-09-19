@@ -2,9 +2,10 @@ package com.jhomlala.better_player
 
 import android.content.Context
 import android.util.Log
-import com.google.android.exoplayer2.upstream.cache.SimpleCache
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
-import com.google.android.exoplayer2.database.ExoDatabaseProvider
+import androidx.media3.database.DatabaseProvider
+import androidx.media3.database.StandaloneDatabaseProvider
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
+import androidx.media3.datasource.cache.SimpleCache
 import java.io.File
 import java.lang.Exception
 
@@ -12,13 +13,14 @@ object BetterPlayerCache {
     @Volatile
     private var instance: SimpleCache? = null
     fun createCache(context: Context, cacheFileSize: Long): SimpleCache? {
+        val databaseProvider: DatabaseProvider = StandaloneDatabaseProvider(context)
         if (instance == null) {
             synchronized(BetterPlayerCache::class.java) {
                 if (instance == null) {
                     instance = SimpleCache(
                         File(context.cacheDir, "betterPlayerCache"),
                         LeastRecentlyUsedCacheEvictor(cacheFileSize),
-                        ExoDatabaseProvider(context)
+                        databaseProvider
                     )
                 }
             }
