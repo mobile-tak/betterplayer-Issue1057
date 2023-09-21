@@ -129,6 +129,7 @@ internal class BetterPlayer(
         val session = MediaSession.Builder(context, exoPlayer)
                 .setId(textureEntry.id().toString())
                 .build()
+
         mediaController = MediaController.Builder(context, session.token)
                 .buildAsync().get()
 
@@ -291,7 +292,7 @@ internal class BetterPlayer(
         } else {
             exoPlayer?.setMediaSource(mediaSource)
         }
-        adsLoader?.setPlayer(mediaController)
+        adsLoader?.setPlayer(exoPlayer)
 
         mediaController?.prepare()
         result.success(null)
@@ -567,10 +568,6 @@ internal class BetterPlayer(
                 val event: MutableMap<String, Any> = HashMap()
                 var playing=if(isPlaying){"play"}else{"pause"}
                 Log.d("chech","isPlaying: $isPlaying")
-                if(!isPlaying){
-                    pause()
-                }
-
                 event["event"] = playing
                 eventSink.success(event)
             }
