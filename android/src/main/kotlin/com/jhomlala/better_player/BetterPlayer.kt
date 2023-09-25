@@ -228,7 +228,7 @@ internal class BetterPlayer(
                 val adTagUri = if(adTag!=null){ Uri.parse(adTag)}else{null}
 
         adsLoader = ImaAdsLoader.Builder( /* context= */context).setAdEventListener { adEvent ->
-            when (adEvent?.type) {
+            when (adEvent.type) {
                 AdEvent.AdEventType.STARTED -> {
                     Log.d("chech", "Ad Started:"+ mediaController?.duration)
                     val event: MutableMap<String, Any> = HashMap()
@@ -268,7 +268,7 @@ internal class BetterPlayer(
         val mediaSourceFactory: MediaSource.Factory = DefaultMediaSourceFactory(context)
 //                .setDataSourceFactory(mediaSource.)
                 .setLocalAdInsertionComponents(
-                        {unusedAdTagUri: MediaItem.AdsConfiguration? -> adsLoader },  /* adViewProvider= */object : AdViewProvider {
+                        { adsLoader },  /* adViewProvider= */object : AdViewProvider {
                     override fun getAdViewGroup(): ViewGroup {
                         val frameLayout=FrameLayout(context.applicationContext)
 
