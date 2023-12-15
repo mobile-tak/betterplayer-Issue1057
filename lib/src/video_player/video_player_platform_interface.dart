@@ -385,6 +385,7 @@ class VideoEvent {
     this.size,
     this.buffered,
     this.position,
+    this.adPositions,
   });
 
   /// The type of the event.
@@ -412,6 +413,9 @@ class VideoEvent {
 
   ///Seek position
   final Duration? position;
+
+  //Ad Positions in this video
+  List<double>? adPositions;
 
   @override
   bool operator ==(Object other) {

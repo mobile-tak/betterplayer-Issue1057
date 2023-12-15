@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 import 'dart:async';
+import 'dart:convert';
+import 'dart:developer';
 import 'package:better_player/src/configuration/better_player_buffering_configuration.dart';
 import 'package:better_player/src/core/better_player_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -357,11 +359,25 @@ class MethodChannelVideoPlayer extends VideoPlayerPlatform {
           }
 
           final Size size = Size(width, height);
-
+          List<double>? adPositions;
+          try {
+            // log('chech: Position:  Here');
+            String? s = map["adPositions"];
+            // log('chech: Position1:  ${s}\n');
+            if (s != null) {
+              List<dynamic> l = jsonDecode(s);
+              // log('chech: Position2:  ${l}\n');
+              adPositions = l.map((e) {
+                // log("chech: Position2: ${e.runtimeType}");
+                return (e as int).toDouble();
+              }).toList();
+            }
+          } catch (e) {}
           return VideoEvent(
             eventType: VideoEventType.initialized,
             key: key,
             duration: Duration(milliseconds: map['duration'] as int),
+            adPositions: adPositions,
             size: size,
           );
         case 'completed':

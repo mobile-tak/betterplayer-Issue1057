@@ -90,7 +90,7 @@ class _BetterPlayerMaterialControlsState
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(6),
                       border: Border.all(color: Colors.black)),
-                  child: Text("Skip the Damn AD!"),
+                  child: Text("Skip the Crap AD!"),
                 ),
               ),
             ),
@@ -649,7 +649,9 @@ class _BetterPlayerMaterialControlsState
 
     if (_controlsConfiguration.showControlsOnInitialize) {
       _initTimer = Timer(const Duration(milliseconds: 200), () {
-        changePlayerControlsNotVisible(false);
+        if (betterPlayerController?.betterPlayerDataSource?.adTag == null) {
+          changePlayerControlsNotVisible(false);
+        }
       });
     }
 

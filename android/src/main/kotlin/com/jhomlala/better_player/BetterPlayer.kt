@@ -112,7 +112,8 @@ internal class BetterPlayer(
     private var lastSendBufferedPosition = 0L
 
     init {
-        adsLoader = ImaAdsLoader.Builder( /* context= */context).build()
+        adsLoader = ImaAdsLoader.Builder( /* context= */context)
+                .build()
 
         val loadBuilder = DefaultLoadControl.Builder()
         loadBuilder.setBufferDurationsMs(
@@ -712,6 +713,55 @@ internal class BetterPlayer(
             event["event"] = "initialized"
             event["key"] = key
             event["duration"] = getDuration()
+            var adGroupTimesMs= arrayListOf<Long>()
+
+            var timeline=mediaController?.currentTimeline
+            if (!(timeline?.isEmpty()?:true)) {
+                var currentWindowIndex = mediaController?.getCurrentMediaItemIndex()
+                var window:Timeline.Window=Timeline.Window()
+                var period:Timeline.Period=Timeline.Period()
+                var adGroupCount=0
+                var durationUs = 0;
+
+                timeline?.getWindow(currentWindowIndex?:0, window)
+//                        var currentWindowOffset = Util.usToMs(durationUs);
+                Log.d("chech","First Period Index: "+window.firstPeriodIndex)
+
+                Log.d("chech","Last Period Index: "+window.lastPeriodIndex)
+
+
+
+
+                for (j in window.firstPeriodIndex.. window.lastPeriodIndex) {
+                        timeline?.getPeriod(j, period)
+                    Log.d("chech","Period Total Ad Count: "+period.adGroupCount)
+
+                    var removedGroups = period.getRemovedAdGroupCount()
+                    Log.d("chech","Period Removed Ad Count: "+period.removedAdGroupCount)
+
+                    var totalGroups = period.getAdGroupCount()
+                        for (adGroupIndex in removedGroups.. (totalGroups-1)) {
+                            var adGroupTimeInPeriodUs = period.getAdGroupTimeUs(adGroupIndex)
+                            Log.d("chech","Period $adGroupIndex Ad Count: "+period.getAdGroupTimeUs(adGroupIndex))
+
+                            if (adGroupTimeInPeriodUs == C.TIME_END_OF_SOURCE) {
+                                if (period.durationUs == C.TIME_UNSET) {
+                                    // Don't show ad markers for postrolls in periods with unknown duration.
+                                    continue;
+                                }
+                                adGroupTimeInPeriodUs = period.durationUs
+                                adGroupTimesMs.add(adGroupTimeInPeriodUs)
+                            }
+
+                        }
+
+                        Log.d("chech","TotalAdGroups: "+totalGroups)
+
+                    }
+
+//                    durationUs += window.durationUs;
+                }
+            event["adPositions"]="[${adGroupTimesMs.joinToString(",")}]"
             if (exoPlayer?.videoFormat != null) {
                 val videoFormat = exoPlayer.videoFormat
                 var width = videoFormat?.width

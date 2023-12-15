@@ -38,6 +38,7 @@ class VideoPlayerValue {
     this.isPip = false,
     this.isAdPlaying = false,
     this.canSkipAd = false,
+    this.adPositions = const [],
   });
 
   /// Returns an instance with a `null` [Duration].
@@ -98,6 +99,9 @@ class VideoPlayerValue {
   //Indicates whether an ad is currently playing
   final bool isAdPlaying;
 
+  //Ad Positions
+  final List<double> adPositions;
+
   //Indicates whether the current ad is skippable or not
   final bool canSkipAd;
 
@@ -135,28 +139,29 @@ class VideoPlayerValue {
     bool? isPip,
     bool? isAdPlaying,
     bool? canSkipAd,
+    List<double>? adPositions,
   }) {
     return VideoPlayerValue(
-      duration: duration ?? this.duration,
-      position: position ?? this.position,
-      absolutePosition: absolutePosition ?? this.absolutePosition,
-      buffered: buffered ?? this.buffered,
-      isPlaying: isPlaying ?? this.isPlaying,
-      isLooping: isLooping ?? this.isLooping,
-      isBuffering: isBuffering ?? this.isBuffering,
-      volume: volume ?? this.volume,
-      speed: speed ?? this.speed,
-      errorDescription: errorDescription ?? this.errorDescription,
-      size: size ?? this.size,
-      isPip: isPip ?? this.isPip,
-      isAdPlaying: isAdPlaying ?? this.isAdPlaying,
-      canSkipAd: canSkipAd ?? this.canSkipAd,
-    );
+        duration: duration ?? this.duration,
+        position: position ?? this.position,
+        absolutePosition: absolutePosition ?? this.absolutePosition,
+        buffered: buffered ?? this.buffered,
+        isPlaying: isPlaying ?? this.isPlaying,
+        isLooping: isLooping ?? this.isLooping,
+        isBuffering: isBuffering ?? this.isBuffering,
+        volume: volume ?? this.volume,
+        speed: speed ?? this.speed,
+        errorDescription: errorDescription ?? this.errorDescription,
+        size: size ?? this.size,
+        isPip: isPip ?? this.isPip,
+        isAdPlaying: isAdPlaying ?? this.isAdPlaying,
+        canSkipAd: canSkipAd ?? this.canSkipAd,
+        adPositions: adPositions ?? this.adPositions);
   }
 
   @override
   String toString() {
-    return 'VideoPlayerValue(duration: $duration, position: $position, absolutePosition: $absolutePosition, buffered: $buffered, isPlaying: $isPlaying, isLooping: $isLooping, isBuffering: $isBuffering, volume: $volume, speed: $speed, errorDescription: $errorDescription, size: $size, isPip: $isPip, isAdPlaying: $isAdPlaying, canSkipAd: $canSkipAd)';
+    return 'VideoPlayerValue(duration: $duration, position: $position, absolutePosition: $absolutePosition, buffered: $buffered, isPlaying: $isPlaying, isLooping: $isLooping, isBuffering: $isBuffering, volume: $volume, speed: $speed, errorDescription: $errorDescription, size: $size, isPip: $isPip, isAdPlaying: $isAdPlaying, canSkipAd: $canSkipAd, adPositions: $adPositions)';
   }
 }
 
@@ -221,6 +226,7 @@ class VideoPlayerController extends ValueNotifier<VideoPlayerValue> {
           value = value.copyWith(
             duration: event.duration,
             size: event.size,
+            adPositions: event.adPositions,
           );
           _initializingCompleter.complete(null);
           _applyPlayPause();

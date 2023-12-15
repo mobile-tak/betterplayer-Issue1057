@@ -196,6 +196,9 @@ class BetterPlayerController {
   //Indicates whether an ad is currently playing or not
   bool _wasAdPlaying = false;
 
+  //Ad Positions in this video stream
+  List<double> adPositions = [];
+
   final StreamController<BetterPlayerControllerEvent>
       _controllerEventStreamController = StreamController.broadcast();
 
@@ -795,6 +798,7 @@ class BetterPlayerController {
     if (currentVideoPlayerValue.initialized &&
         !_hasCurrentDataSourceInitialized) {
       _hasCurrentDataSourceInitialized = true;
+      adPositions = currentVideoPlayerValue.adPositions;
       _postEvent(BetterPlayerEvent(BetterPlayerEventType.initialized));
     }
     if (currentVideoPlayerValue.isPip) {
