@@ -3,6 +3,7 @@ import 'package:better_player/better_player.dart';
 import 'package:better_player/src/video_player/video_player.dart';
 import 'package:better_player/src/video_player/video_player_platform_interface.dart';
 import 'package:flutter/material.dart';
+import 'dart:developer' as dev;
 
 class BetterPlayerMaterialVideoProgressBar extends StatefulWidget {
   BetterPlayerMaterialVideoProgressBar(
@@ -69,66 +70,72 @@ class _VideoProgressBarState
     final bool enableProgressBarDrag = betterPlayerController!
         .betterPlayerConfiguration.controlsConfiguration.enableProgressBarDrag;
 
-    return GestureDetector(
-      onHorizontalDragStart: (DragStartDetails details) {
-        if (!controller!.value.initialized || !enableProgressBarDrag) {
-          return;
-        }
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.transparent,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onHorizontalDragStart: (DragStartDetails details) {
+          if (!controller!.value.initialized || !enableProgressBarDrag) {
+            return;
+          }
 
-        _controllerWasPlaying = controller!.value.isPlaying;
-        if (_controllerWasPlaying) {
-          controller!.pause();
-        }
+          _controllerWasPlaying = controller!.value.isPlaying;
+          if (_controllerWasPlaying) {
+            controller!.pause();
+          }
 
-        if (widget.onDragStart != null) {
-          widget.onDragStart!();
-        }
-      },
-      onHorizontalDragUpdate: (DragUpdateDetails details) {
-        if (!controller!.value.initialized || !enableProgressBarDrag) {
-          return;
-        }
+          if (widget.onDragStart != null) {
+            widget.onDragStart!();
+          }
+        },
+        onHorizontalDragUpdate: (DragUpdateDetails details) {
+          if (!controller!.value.initialized || !enableProgressBarDrag) {
+            return;
+          }
 
-        seekToRelativePosition(details.globalPosition);
+          seekToRelativePosition(details.globalPosition);
 
-        if (widget.onDragUpdate != null) {
-          widget.onDragUpdate!();
-        }
-      },
-      onHorizontalDragEnd: (DragEndDetails details) {
-        if (!enableProgressBarDrag) {
-          return;
-        }
+          if (widget.onDragUpdate != null) {
+            widget.onDragUpdate!();
+          }
+        },
+        onHorizontalDragEnd: (DragEndDetails details) {
+          if (!enableProgressBarDrag) {
+            return;
+          }
 
-        if (_controllerWasPlaying) {
-          betterPlayerController?.play();
-          shouldPlayAfterDragEnd = true;
-        }
-        _setupUpdateBlockTimer();
+          if (_controllerWasPlaying) {
+            betterPlayerController?.play();
+            shouldPlayAfterDragEnd = true;
+          }
+          _setupUpdateBlockTimer();
 
-        if (widget.onDragEnd != null) {
-          widget.onDragEnd!();
-        }
-      },
-      onTapDown: (TapDownDetails details) {
-        if (!controller!.value.initialized || !enableProgressBarDrag) {
-          return;
-        }
-        seekToRelativePosition(details.globalPosition);
-        _setupUpdateBlockTimer();
-        if (widget.onTapDown != null) {
-          widget.onTapDown!();
-        }
-      },
-      child: Center(
+          if (widget.onDragEnd != null) {
+            widget.onDragEnd!();
+          }
+        },
+        onTapDown: (TapDownDetails details) {
+          dev.log("chech: Better: Tap Down");
+          if (!controller!.value.initialized || !enableProgressBarDrag) {
+            return;
+          }
+          seekToRelativePosition(details.globalPosition);
+          _setupUpdateBlockTimer();
+          if (widget.onTapDown != null) {
+            widget.onTapDown!();
+          }
+        },
         child: Container(
-          height: MediaQuery.of(context).size.height / 2,
-          width: MediaQuery.of(context).size.width,
-          color: Colors.transparent,
-          child: CustomPaint(
-            painter: _ProgressBarPainter(
-              _getValue(),
-              widget.colors,
+          child: Container(
+            height: MediaQuery.of(context).size.height / 2,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.transparent,
+            child: CustomPaint(
+              painter: _ProgressBarPainter(
+                _getValue(),
+                widget.colors,
+              ),
             ),
           ),
         ),
@@ -197,13 +204,13 @@ class _ProgressBarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const height = 2.0;
+    const height = 6.0;
 
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         Rect.fromPoints(
-          Offset(0.0, size.height / 2),
-          Offset(size.width, size.height / 2 + height),
+          Offset(0.0, 0.0),
+          Offset(size.width, height),
         ),
         const Radius.circular(4.0),
       ),
@@ -231,10 +238,10 @@ class _ProgressBarPainter extends CustomPainter {
       canvas.drawRRect(
         RRect.fromRectAndRadius(
           Rect.fromPoints(
-            Offset(start, size.height / 2),
-            Offset(end, size.height / 2 + height),
+            Offset(start, 0.0),
+            Offset(end, height),
           ),
-          const Radius.circular(4.0),
+          const Radius.circular(40.0),
         ),
         colors.bufferedPaint,
       );
@@ -242,16 +249,16 @@ class _ProgressBarPainter extends CustomPainter {
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         Rect.fromPoints(
-          Offset(0.0, size.height / 2),
-          Offset(playedPart, size.height / 2 + height),
+          Offset(0.0, 0.0),
+          Offset(playedPart, height),
         ),
         const Radius.circular(4.0),
       ),
       colors.playedPaint,
     );
     canvas.drawCircle(
-      Offset(playedPart, size.height / 2 + height / 2),
-      height * 3,
+      Offset(playedPart, height / 2),
+      height,
       colors.handlePaint,
     );
   }

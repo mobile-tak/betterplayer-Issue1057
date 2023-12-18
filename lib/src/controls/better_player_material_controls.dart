@@ -224,7 +224,7 @@ class _BetterPlayerMaterialControlsState
               duration: _controlsConfiguration.controlsHideTime,
               onEnd: _onPlayerHide,
               child: Container(
-                height: _controlsConfiguration.controlBarHeight,
+                height: _controlsConfiguration.controlBarHeight + 12.0,
                 width: double.infinity,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -341,6 +341,9 @@ class _BetterPlayerMaterialControlsState
                     const SizedBox(),
                 ],
               ),
+            ),
+            const SizedBox(
+              height: 8,
             ),
             if (_betterPlayerController!.isLiveStream())
               const SizedBox()
