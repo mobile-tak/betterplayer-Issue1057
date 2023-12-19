@@ -29,6 +29,10 @@ class _BasicPlayerPageState extends State<BasicPlayerPage> {
             aspectRatio: 16 / 9,
             child: BetterPlayer.network(
               Constants.forBiggerBlazesUrl,
+              betterPlayerConfiguration:
+                  BetterPlayerConfiguration(autoPlay: true),
+              adTag:
+                  "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=",
             ),
           ),
           Padding(
@@ -43,7 +47,11 @@ class _BasicPlayerPageState extends State<BasicPlayerPage> {
             future: Utils.getFileUrl(Constants.fileTestVideoUrl),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.data != null) {
-                return BetterPlayer.file(snapshot.data!);
+                return BetterPlayer.file(
+                  snapshot.data!,
+                  adTag:
+                      "https://pubads.g.doubleclick.net/gampad/ads?iu=/1007232/Lallantop_Apps/LT_And_VOD_Preroll_400x300-640x480&description_url=https%3A%2F%2Fwww.thelallantop.com%2F&tfcd=0&npa=0&sz=400x300%7C640x480&gdfp_req=1&output=vmap&ad_rule=1&unviewed_position_start=1&env=vp&impl=s&cmsid=496&vid=short_onecue&correlator=",
+                );
               } else {
                 return const SizedBox();
               }
