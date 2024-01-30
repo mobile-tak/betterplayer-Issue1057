@@ -751,6 +751,9 @@ internal class BetterPlayer(
                                 }
                                 adGroupTimeInPeriodUs = period.durationUs
                                 adGroupTimesMs.add(adGroupTimeInPeriodUs)
+                            }else{
+                                adGroupTimesMs.add(adGroupTimeInPeriodUs)
+
                             }
 
                         }

@@ -5,6 +5,8 @@ import 'package:better_player/src/video_player/video_player_platform_interface.d
 import 'package:flutter/material.dart';
 import 'dart:developer' as dev;
 
+import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+
 class BetterPlayerMaterialVideoProgressBar extends StatefulWidget {
   BetterPlayerMaterialVideoProgressBar(
     this.controller,
@@ -100,11 +102,13 @@ class _VideoProgressBarState
             widget.onDragUpdate!();
           }
         },
-        onHorizontalDragEnd: (DragEndDetails details) {
+        onHorizontalDragEnd: (DragEndDetails details) async {
           if (!enableProgressBarDrag) {
             return;
           }
-
+          await betterPlayerController!.seekTo(lastSeek ??
+              betterPlayerController!.videoPlayerController?.value.position ??
+              Duration());
           if (_controllerWasPlaying) {
             betterPlayerController?.play();
             shouldPlayAfterDragEnd = true;
@@ -176,7 +180,7 @@ class _VideoProgressBarState
         onFinishedLastSeek();
         if (relative >= 1) {
           lastSeek = controller!.value.duration;
-          await betterPlayerController!.seekTo(controller!.value.duration!);
+          // await betterPlayerController!.seekTo(controller!.value.duration!);
           onFinishedLastSeek();
         }
       }
@@ -205,7 +209,7 @@ class _ProgressBarPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     const height = 6.0;
-
+    const adMarkerLength = 8.0;
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         Rect.fromPoints(
@@ -256,6 +260,19 @@ class _ProgressBarPainter extends CustomPainter {
       ),
       colors.playedPaint,
     );
+    for (double ad in value.adPositions) {
+      Paint paint = Paint();
+      paint.color = Colors.yellow;
+      double adPosPercent = (ad / 1000) / value.duration!.inMilliseconds;
+      final double adPosPart =
+          adPosPercent > 1 ? size.width : adPosPercent * size.width;
+      canvas.drawRect(
+          Rect.fromPoints(
+            Offset(adPosPart, 0.0),
+            Offset(adPosPart + adMarkerLength, height),
+          ),
+          paint);
+    }
     canvas.drawCircle(
       Offset(playedPart, height / 2),
       height,

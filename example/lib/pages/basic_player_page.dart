@@ -32,7 +32,7 @@ class _BasicPlayerPageState extends State<BasicPlayerPage> {
               betterPlayerConfiguration:
                   BetterPlayerConfiguration(autoPlay: true),
               adTag:
-                  "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/single_preroll_skippable&sz=640x480&ciu_szs=300x250%2C728x90&gdfp_req=1&output=vast&unviewed_position_start=1&env=vp&impl=s&correlator=",
+                  "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpremidpost&ciu_szs=300x250&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&cmsid=496&vid=short_onecue&correlator=",
             ),
           ),
           Padding(
@@ -50,7 +50,7 @@ class _BasicPlayerPageState extends State<BasicPlayerPage> {
                 return BetterPlayer.file(
                   snapshot.data!,
                   adTag:
-                      "https://pubads.g.doubleclick.net/gampad/ads?iu=/1007232/Lallantop_Apps/LT_And_VOD_Preroll_400x300-640x480&description_url=https%3A%2F%2Fwww.thelallantop.com%2F&tfcd=0&npa=0&sz=400x300%7C640x480&gdfp_req=1&output=vmap&ad_rule=1&unviewed_position_start=1&env=vp&impl=s&cmsid=496&vid=short_onecue&correlator=",
+                      "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/external/vmap_ad_samples&sz=640x480&cust_params=sample_ar%3Dpremidpostoptimizedpod&ciu_szs=300x250&gdfp_req=1&ad_rule=1&output=vmap&unviewed_position_start=1&env=vp&impl=s&cmsid=496&vid=short_onecue&correlator=",
                 );
               } else {
                 return const SizedBox();
