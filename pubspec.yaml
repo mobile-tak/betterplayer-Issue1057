@@ -1,9 +1,10 @@
 name: better_player
-description: Advanced video player based on video_player and Chewie. It's solves many typical use cases and it's easy to run.
-version: 0.0.83
+description: Advanced video player based on video_player and Chewie. It's solves many typical use cases and it's easy to run. Now with partial IMA(Interactive Media Ads) support for Android.
+version: 0.0.84
 # Disabled because of warning from analyzer
 # authors:
 #  - Jakub Homlala <jhomlala@gmail.com>
+#  - Harshit Verma <harshitverma209@gmail.com>
 homepage: https://github.com/jhomlala/betterplayer
 documentation: https://jhomlala.github.io/betterplayer/
 
