@@ -32,6 +32,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
+    namespace "com.jhomlala.better_player"
     compileSdkVersion 34
 
     compileOptions {
@@ -52,7 +53,6 @@ android {
     }
 
     dependencies {
-
         implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
         implementation "androidx.lifecycle:lifecycle-common:$lifecycleVersion"
         implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
@@ -64,11 +64,11 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 
-    implementation 'androidx.media3:media3-exoplayer-ima:1.2.0'
-    implementation 'androidx.media3:media3-exoplayer:1.2.0'
-    implementation 'androidx.media3:media3-ui:1.2.0'
-    implementation 'androidx.media3:media3-exoplayer-dash:1.2.0'
-    implementation 'androidx.media3:media3-exoplayer-hls:1.2.0'
-    implementation 'androidx.media3:media3-exoplayer-smoothstreaming:1.2.0'
-    implementation 'androidx.media3:media3-session:1.2.0'
+    implementation 'androidx.media3:media3-exoplayer-ima:1.6.0'
+    implementation 'androidx.media3:media3-exoplayer:1.6.0'
+    implementation 'androidx.media3:media3-ui:1.6.0'
+    implementation 'androidx.media3:media3-exoplayer-dash:1.6.0'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.6.0'
+    implementation 'androidx.media3:media3-exoplayer-smoothstreaming:1.6.0'
+    implementation 'androidx.media3:media3-session:1.6.0'
 }

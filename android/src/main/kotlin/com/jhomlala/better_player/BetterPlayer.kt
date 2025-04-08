@@ -11,13 +11,8 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Handler
-import android.os.Looper
-//import android.support.v4.media.MediaMetadataCompat
-//import android.support.v4.media.session.MediaSessionCompat
-//import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.view.Surface
-import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.lifecycle.Observer
@@ -25,7 +20,6 @@ import androidx.media3.common.AdOverlayInfo
 import androidx.media3.common.AdViewProvider
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.C
-import androidx.media3.common.ForwardingPlayer
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.PlaybackParameters
@@ -255,7 +249,11 @@ internal class BetterPlayer(
                     Log.d("chech", "Ad Skippable State Changed")
                     val event: MutableMap<String, Any> = HashMap()
                     event["event"] = "adSkippableStateChanged"
-                    event["skippable"]=adEvent.ad.isSkippable
+                    try {
+                        event["skippable"] = adEvent.ad.isSkippable
+                    } catch (e: Exception) {
+                        event["skippable"] = false
+                    }
                     eventSink.success(event)
                 }
 
